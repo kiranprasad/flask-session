@@ -158,6 +158,11 @@ class RedisSessionInterface(SessionInterface):
         # if not self.should_set_cookie(app, session):
         #    return
 
+        cookie_args = {}
+        if getattr(self, get_cookie_samesite, None) is not None:
+            cookie_args['samesite'] = self.get_cookie_samesite(app)
+
+
         httponly = self.get_cookie_httponly(app)
         secure = self.get_cookie_secure(app)
         expires = self.get_expiration_time(app, session)
@@ -170,7 +175,8 @@ class RedisSessionInterface(SessionInterface):
             session_id = session.sid
         response.set_cookie(app.session_cookie_name, session_id,
                             expires=expires, httponly=httponly,
-                            domain=domain, path=path, secure=secure)
+                            domain=domain, path=path, secure=secure,
+                            **cookie_args)
 
 
 class MemcachedSessionInterface(SessionInterface):
@@ -272,6 +278,10 @@ class MemcachedSessionInterface(SessionInterface):
                                        domain=domain, path=path)
             return
 
+        cookie_args = {}
+        if getattr(self, get_cookie_samesite, None) is not None:
+            cookie_args['samesite'] = self.get_cookie_samesite(app)
+
         httponly = self.get_cookie_httponly(app)
         secure = self.get_cookie_secure(app)
         expires = self.get_expiration_time(app, session)
@@ -287,7 +297,8 @@ class MemcachedSessionInterface(SessionInterface):
             session_id = session.sid
         response.set_cookie(app.session_cookie_name, session_id,
                             expires=expires, httponly=httponly,
-                            domain=domain, path=path, secure=secure)
+                            domain=domain, path=path, secure=secure,
+                            **cookie_args)
 
 
 class FileSystemSessionInterface(SessionInterface):
@@ -346,6 +357,11 @@ class FileSystemSessionInterface(SessionInterface):
                                        domain=domain, path=path)
             return
 
+        cookie_args = {}
+        if getattr(self, get_cookie_samesite, None) is not None:
+            cookie_args['samesite'] = self.get_cookie_samesite(app)
+
+
         httponly = self.get_cookie_httponly(app)
         secure = self.get_cookie_secure(app)
         expires = self.get_expiration_time(app, session)
@@ -358,7 +374,8 @@ class FileSystemSessionInterface(SessionInterface):
             session_id = session.sid
         response.set_cookie(app.session_cookie_name, session_id,
                             expires=expires, httponly=httponly,
-                            domain=domain, path=path, secure=secure)
+                            domain=domain, path=path, secure=secure,
+                            **cookie_args)
 
 
 class MongoDBSessionInterface(SessionInterface):
@@ -431,6 +448,11 @@ class MongoDBSessionInterface(SessionInterface):
                                        domain=domain, path=path)
             return
 
+        cookie_args = {}
+        if getattr(self, get_cookie_samesite, None) is not None:
+            cookie_args['samesite'] = self.get_cookie_samesite(app)
+
+
         httponly = self.get_cookie_httponly(app)
         secure = self.get_cookie_secure(app)
         expires = self.get_expiration_time(app, session)
@@ -445,7 +467,8 @@ class MongoDBSessionInterface(SessionInterface):
             session_id = session.sid
         response.set_cookie(app.session_cookie_name, session_id,
                             expires=expires, httponly=httponly,
-                            domain=domain, path=path, secure=secure)
+                            domain=domain, path=path, secure=secure,
+                            **cookie_args)
 
 
 class SqlAlchemySessionInterface(SessionInterface):
@@ -526,6 +549,11 @@ class SqlAlchemySessionInterface(SessionInterface):
                 return self.session_class(sid=sid, permanent=self.permanent)
         return self.session_class(sid=sid, permanent=self.permanent)
 
+        cookie_args = {}
+        if getattr(self, get_cookie_samesite, None) is not None:
+            cookie_args['samesite'] = self.get_cookie_samesite(app)
+
+
     def save_session(self, app, session, response):
         domain = self.get_cookie_domain(app)
         path = self.get_cookie_path(app)
@@ -559,4 +587,5 @@ class SqlAlchemySessionInterface(SessionInterface):
             session_id = session.sid
         response.set_cookie(app.session_cookie_name, session_id,
                             expires=expires, httponly=httponly,
-                            domain=domain, path=path, secure=secure)
+                            domain=domain, path=path, secure=secure,
+                            **cookie_args)
